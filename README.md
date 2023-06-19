@@ -1,1 +1,1 @@
-# AlgoHeur Project Solved by Ranger
+# AlgoHeur Project Solved by Ranger (teamname)
