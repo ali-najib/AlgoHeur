@@ -15,3 +15,6 @@ class Route():
     def delete_route(self, destination, time):
         self.route.remove(destination)
         self.total_time -= time
+
+    def length(self):
+        return len(self.route)
