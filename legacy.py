@@ -107,8 +107,7 @@ class Baseline_search2():
                     plt.plot([connection[0].coordinates[1], station.coordinates[1]], [connection[0].coordinates[0], station.coordinates[0]], 'k-', alpha=0.1)
             
             plt.show()
-
-        
+            
         return
 
 
@@ -295,19 +294,10 @@ def random_search(iteration_count):
 #random_search(1000)
 
 
+
+
 ######--------------------------#########
-
-
-
-
-
-
-
-
-
-
-
-
+# Convert to a class!
 
 
 # search2() solves Opdracht 1 and first part of Opdracht 2, but better solutions exist.
@@ -400,7 +390,10 @@ def optimize(lines_batch, iteration_count):
     print("Optimal Line:", optimal_route)
     return optimal_route
 
+def visualize():
+    pass
+
 
 # Can be run with both Holland and Nationaal.
-#lines_batch = search2(100000)
-#optimize(lines_batch, 100000)
+lines_batch = search2(100000)
+optimize(lines_batch, 100000)

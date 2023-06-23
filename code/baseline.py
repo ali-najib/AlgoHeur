@@ -1,115 +1,26 @@
-#from code.import_data import stations
+from import_data import stations
 import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 import random
 import sys
-#from code.station import Station
-#from code.route import Route
+from station import Station
+from route import Route
 from array import *
 import time
-
-######### Instead of importing, include classes to file, and data downloads to file. ########
-
-
-
-"""Class station."""
-
-class Station():
-    """Class station."""
-    counter = 1
-    def __init__(self, name, y, x):
-        """Initalize class."""
-        self.id = Station.counter
-        self.name = name
-        self.visited = False
-        self.coordinates = (y, x)
-        self.connections = []
-        Station.counter += 1
-
-    def add_connection(self, destination, time):
-        """"""
-        self.connections.append([destination, time, False])
-
-    def ride_connection(self, destination):
-        """Sets a connection to ridden"""
-        for connection in self.connections:
-            if connection[0] == destination:
-                connection[2] == True
-
-"""Route class."""
-class Route():
-    """Class route."""
-    counter = 1
-    def __init__(self, start):
-        self.id = Route.counter
-        self.route = [start]
-        self.total_time = 0
-        Route.counter += 1
-
-    def add_route(self, destination, time):
-        self.route.append(destination)
-        self.total_time += time
-
-    def delete_route(self, destination, time):
-        self.route.remove(destination)
-        self.total_time -= time
-
-    def length(self):
-        return len(self.route)
-
-
-def Stations():
-    # Creates list of all stations with coordinates
-    stations = []
-    with open(f"/Users/ali/Documents/Programming/AlgoHeur/data/StationsNationaal.csv", 'r') as f:
-        reader = csv.reader(f)
-        header = next(reader)
-        if header != None:
-            for row in reader:
-                station = Station(row[0], float(row[1]), float(row[2]))
-                stations.append(station)
-    return stations
-
-
-def Connections():
-    connections = []
-    stations = Stations()
-    with open(f"/Users/ali/Documents/Programming/AlgoHeur/data/ConnectiesNationaal.csv", 'r') as g:
-        reader = csv.reader(g)
-        header = next(reader)
-        if header != None:
-            for row in reader:
-
-                for station_1 in stations:
-                    if station_1.name == row[0]:
-
-                        for station_2 in stations:
-                            if station_2.name == row[1]:
-                                station_1.add_connection(station_2, float(row[2]))
-
-                for station_1 in stations:
-                    if station_1.name == row[1]:
-
-                        for station_2 in stations:
-                            if station_2.name == row[0]:
-                                station_1.add_connection(station_2, float(row[2]))
-    return stations
-
-stations = Connections()
-
-
-
-
-
-
 
 
 ####################################################################################
 
+
 class Baseline_search():
 
     def __init__(self, stations) -> None:
+        """
+        Initializes the twofold_connectioncount variable using the stations import
+        """
+
+        # Initialize twofold_connectioncount variable using the stations argument
         self.route_batch = []
         self.ridden_connections = []
         self.twofold_connectioncount = 0
@@ -117,10 +28,17 @@ class Baseline_search():
         for station in self.stations:
             self.twofold_connectioncount += len(station.connections)
 
+    def run(self, route_duration):
+        """
+        Runs the Baseline-search algorithm
+        """
 
-    def run(self):
-
-        # Initialize variables
+        # Initialize baseline_search (i.e. random-search) variables
+        self.route_batch = []
+        self.ridden_connections = []
+        self.twofold_connectioncount = 0
+        for station in self.stations:
+            self.twofold_connectioncount += len(station.connections)
         route_count = 0
         
         # Continue if route_count is less than 20 and not all connections have been used
@@ -128,11 +46,10 @@ class Baseline_search():
             limit = 0
             
             # Set start station
-            
             start_station = random.choice(self.stations)
             route = Route(start_station)
             
-            # If route-total_time is less than 180, extend route.
+            # Loop while route can be extented
             while limit == 0:
 
                 S = random.choice([0, 0, 0, 20, 0])
@@ -142,95 +59,110 @@ class Baseline_search():
                 route.add_route(destination, time)
                 route.total_time += S
 
-                if route.total_time > 180:
+                # If total time consumed by is greater than route_duration, e.g. 120 or 180, break while loop
+                if route.total_time > route_duration:
                     limit = 1
                     route.delete_route(destination, time)
                     route_count += 1
                     self.route_batch.append(route)
                     break
 
+                # Update ridden_connections by inserting connection newly ridden by newly constructed route.
                 self.ridden_connections.append((start_station, destination))
                 self.ridden_connections.append((destination, start_station))
+
+                # Update start station upon further extension of route
                 start_station = destination
                 continue
-        
-        # Keep track of iterations
-        # print(len(set(self.ridden_connections)))
-        # print(self.twofold_connectioncount)
-        # print(self.twofold_connectioncount is len(set(self.ridden_connections)))
-        # print("Found Route:", self.route_batch)
-
+    
+        # Compute the score K for found route_batch, i.e. lijnvoering
         Min = 0
         for route in self.route_batch:
             Min += route.total_time
+
+        # Using the list of ridden_connection calculate fraction of all connections ridden
         p = len(set(self.ridden_connections))/(self.twofold_connectioncount) 
+       
+        # Retreive amount of routes in the lijnvoering
         T = len(self.route_batch)
+
+        #Calculate K
         K = 10000*p - (T*100 + Min)
 
+        # return all objects necessary for later use in experimentation and visualisation
         return self.ridden_connections, self.route_batch, K
     
 
     def visualise(self):
-        # visualise!
+        """
+        Constructs a map of the stations with their interconnections, and enforces a route on the map.
+        """
+
+        # Retrieve results from Baseline_search(stations).run(), initialize route_batch
         route_batch = Baseline_search(stations).run()
         route_batch = route_batch[1]
 
+        # Perform visualisation by plotting each route on one coordinate system seperately
         counter = 1
+
+        # iterate over route_batch, plot each route on a seperate coordinate system.
         for route in route_batch:
             route_length = len(route.route)
+
+            # Plot the route
             for i in range(0, route_length-2):
                 
                 plt.plot([route.route[i+1].coordinates[1], route.route[i].coordinates[1]], [route.route[i+1].coordinates[0], route.route[i].coordinates[0]], 'k-', alpha = 0.5, linewidth = 3)
                 plt.plot(route.route[i].coordinates[1], route.route[i].coordinates[0], 'ro', alpha = 0.4)
                 plt.plot(route.route[i+1].coordinates[1], route.route[i+1].coordinates[0], 'ro', alpha = 0.4)
 
+            # Plot the coordinate system
             for station in stations:
                 plt.plot(station.coordinates[1], station.coordinates[0], 'ro', alpha=0.1)
                 plt.text(station.coordinates[1], station.coordinates[0], station.name, fontsize= 6)
                 for connection in station.connections:
                     plt.plot([connection[0].coordinates[1], station.coordinates[1]], [connection[0].coordinates[0], station.coordinates[0]], 'k-', alpha=0.05)  
 
-            # setting title
+            # Set plot title
             plt.title(f"Lijnvoering-element {counter} Route", fontsize=12)
             counter += 1
             
-            # setting x-axis label and y-axis label
+            # Set x-axis label and y-axis label
             plt.xlabel("chart X-coordinate")
             plt.ylabel("chart Y-coordinate")
             plt.show()
         return
+    
+
+    def density_plot(self, iteration_count, route_duration):
+        """
+        Constructs a density plot of K-scores found after running Baseline-search.
+        Important for knowing where initial values from running Hillclimber and SimulatedAnnealing comes from.
+        """
+
+        # Initialize variables
+        data = []
+        counter = 0
+
+        # For each run, append its resulting K to data
+        while counter < iteration_count:
+            runresults = Baseline_search(stations).run(route_duration)
+            data.append(runresults[2])
+            counter += 1
+
+        # Plot the results
+        sns.distplot(data, hist=True, kde=True, 
+             bins=100, color = 'darkblue', 
+             hist_kws={'edgecolor':'black'},
+             kde_kws={'linewidth': 3})
+
+        #Plot formatting
+        plt.title('Baseline Results ({iteration_count} runs, Setting = Holland)')
+        plt.xlabel('K-value')
+        plt.ylabel('Density')
+        plt.show()
 
 
-
-
-
-def optimize(lines_batch, iteration_count):
-    K_list = []
-    for i in range(0, iteration_count):
-        K_list.append(lines_batch[i][1])
-    max_value = max(K_list)
-    index = K_list.index(max_value)
-    optimal_route = lines_batch[index][0]
-    print("Max K-score found:", max_value)
-    print("Optimal Line:", optimal_route)
-    return optimal_route
-
-# Can be run with both Holland and Nationaal.
-#data = random_search(10000)
-#print(data)
-#sns.distplot(data, hist=True, kde=True, 
-#             bins=100, color = 'darkblue', 
-#             hist_kws={'edgecolor':'black'},
-#             kde_kws={'linewidth': 3})
-
-# Plot formatting
-#plt.title('Baseline Results (10000 runs, Setting = Holland)')
-#plt.xlabel('K-value')
-#plt.ylabel('Density')
-#plt.show()
-
-
-runresult = Baseline_search(stations).run()
-print(runresult[2])
-
-#optimize(lines_batch, 1000)
+# Now simulate!
+#Baseline_search(stations).density_plot(10000, 180)
+#Baseline_search(stations).visualise()
