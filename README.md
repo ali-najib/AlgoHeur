@@ -6,6 +6,9 @@ Deze case gaat over het maken van de lijnvoering. Meer specifiek: over de lijnvo
  Vereisten:
 Python 3.8.9
 
+
+
+
 ### User Interface
 
 Het gebruik van deze applicatie gaat via de file run.py. Alle relevante code-lines te runnen voor een gebruiker staan in die file.
@@ -15,16 +18,23 @@ Om een van de code-lines te runnen, verwijder de hashtag voor de desbetreffende 
 python3 run.py
 ```
 
-Merk op dat de variabelen ```iteration_count```, ```route_duration``` en ```route_count``` kunnen worden gevarieerd zoals gewenst door de gebruiker. 
-\\
-\\
-Ook kan er worden gesleuteld
+Merk op dat de variabelen ```iteration_count```, ```route_duration``` en ```route_count``` kunnen worden gevarieerd zoals gewenst door de gebruiker. Ook kan er worden gesleuteld
 aan de file **code/algorithms/import_data.py** om de code te runnen onder de setting Holland of de setting Nationaal. Om de code te runnen onder de setting Holland,
 insert **data/StationsHolland.csv** en **data/ConnectiesHolland.csv** in lines 8 en 21 van **code/algorithms/import_data.py** respectievelijk. Om de code te runnen onder de setting Nationaal
 **insert data/StationsNationaal.csv** en **data/ConnectiesNationaal.csv** in lines 8 en 21 van **code/algorithms/import_data.py** respectievelijk.
 
 ### Resultaten
 Resultaten van het gebruik van run.py komen tevoorschijn in de vorm van plots als pop-ups, en/of output in de vorm van tekst te vinden in **code/results** en/of output te zien in de terminal.
+
+### Structuur
+
+De hierop volgende lijst beschrijft de belangrijkste mappen en files in het project, en waar je ze kan vinden:\
+
+-/code: bevat alle code van dit project
+ -/code/algorithms: bevat de code voor algoritmes
+ -/code/classes: bevat de twee benodigde classes voor deze case
+-/data: bevat de verschillende databestanden die nodig zijn.
+-/results: bevat csv bestanden waarin output van de algorithmen te vinden
 
 
 ## Auteur
