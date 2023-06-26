@@ -1,10 +1,10 @@
 # AlgoHeur Project, by Ali Najib
 
-Een dienstregeling voor treinverkeer bestaat eigenlijk uit vier planningsonderdelen:
-De lijnvoering: Wat zijn de trajecten waarover de treinen gedurende de dag heen en weer rijden?
-De dienstregeling: hoe laat vertrekken de treinen van de stations over de trajecten?
-Het materieelrooster: welk treinstel en welke wagons zijn op welk moment op welke plaats?
-Het personeelsrooster: zijn alle treinen bemand door tenminste één bestuurder en twee conducteurs?
+Een dienstregeling voor treinverkeer bestaat eigenlijk uit vier planningsonderdelen:\
+De lijnvoering: Wat zijn de trajecten waarover de treinen gedurende de dag heen en weer rijden?\
+De dienstregeling: hoe laat vertrekken de treinen van de stations over de trajecten?\
+Het materieelrooster: welk treinstel en welke wagons zijn op welk moment op welke plaats?\
+Het personeelsrooster: zijn alle treinen bemand door tenminste één bestuurder en twee conducteurs?\
 Deze case gaat over het eerste deel, het maken van de lijnvoering. Meer specifiek: over de lijnvoering van intercitytreinen. Dat betekent dat je binnen een gegeven tijdsframe een aantal trajecten uitzet. Een traject is een route van sporen en stations waarover treinen heen en weer rijden. Een traject mag niet langer zijn dan het opgegeven tijdsframe.
 
 # Aan de slag
