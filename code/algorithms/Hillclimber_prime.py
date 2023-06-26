@@ -9,6 +9,9 @@ from code.classes.route import Route
 from array import *
 from code.algorithms.baseline import Baseline_search
 
+
+
+## Hilclimber_prime is an extremely improved version of Hillclimber, although the degree of improvement does indicate the existence of bugs.
 class Hillclimber_prime():
 
     def __init__(self, stations) -> None:
@@ -237,7 +240,3 @@ class Hillclimber_prime():
             #plt.show()
 
 
-## Now simulate!
-
-#Hillclimber(stations).plot(20000, 180)
-#Hillclimber(stations).optimal_lijnvoering_finder(100, 180)

@@ -40,12 +40,3 @@ def Connections():
     return stations
 
 stations = Connections()
-
-
-
-
-
-# connecties = Connecties()
-# for station in stations:
-#     # print(station.station_name)
-#     print(station.connections[0])

@@ -6,7 +6,7 @@ from code.classes.station import Station
 from code.classes.route import Route
 
 
-# Set data to data/StationsHolland.csv and data/ConnectionsHolland.csv (otherwise no solution is found)!!
+# Set data to data/StationsHolland.csv and data/ConnectionsHolland.csv (otherwise no solution is found)!
 # search2() solves Opdracht 1, but better solutions exist.
 def search2(iteration_count, route_duration, rcount): 
 

@@ -12,10 +12,8 @@ import math
 import random
 
 
-####################################################################################
-#### Convert to a class, and add visualize functions!
 
-
+## SimulatedAnnealing_prime is an extremely improved version of SimulatedAnnealing, although the degree of improvement does indicate the existence of bugs.
 class SimulatedAnnealing_prime():
     
     def __init__(self, stations, route_duration, route_count):
@@ -360,10 +358,3 @@ class SimulatedAnnealing_prime():
             plt.show()
 
 
-# Now simulate!
-# Delete or add a hashtag in front of the below lines in order to run or disable them.
-
-#SimulatedAnnealing_prime(stations).plot_linear(1000, 180)
-#SimulatedAnnealing(stations).plot_expo(10000, 180)
-#SimulatedAnnealing(stations).search_vs_score(10000, 180)
-#SimulatedAnnealing(stations).Optimal_lijnvoering_finder(10000, 180)

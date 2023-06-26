@@ -67,7 +67,7 @@ route_count = 20
 
 ################################################ PRIME ALGORITHMS ################################################
 ## These algorithms are extremely improved versions of the above algorithms, though the degree of improvement does indicate a buggy implementation
-
+## The main additional strategy in these algorithms is to use as many connections as possible.
 
 
 ######## HILLCLIMBER SEARCH PRIME ########

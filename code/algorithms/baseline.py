@@ -10,9 +10,8 @@ from array import *
 import time
 
 
-####################################################################################
 
-
+## The Baseline search algorithm
 class Baseline_search():
 
     def __init__(self, stations) -> None:

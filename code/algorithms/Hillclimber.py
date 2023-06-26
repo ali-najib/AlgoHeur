@@ -9,6 +9,9 @@ from code.classes.route import Route
 from array import *
 from code.algorithms.baseline import Baseline_search
 
+
+
+## The Hillclimber-search algorithm
 class Hillclimber():
 
     def __init__(self, stations) -> None:
@@ -226,8 +229,3 @@ class Hillclimber():
         
             #plt.show()
 
-
-## Now simulate!
-
-#Hillclimber(stations).plot(20000, 180)
-#Hillclimber(stations).optimal_lijnvoering_finder(100, 180)
