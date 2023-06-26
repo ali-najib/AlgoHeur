@@ -1,13 +1,14 @@
-from import_data import stations
+from code.algorithms.import_data import stations
 import matplotlib.pyplot as plt
 import csv
 import random
-from station import Station
-from route import Route
+from code.classes.station import Station
+from code.classes.route import Route
 
 
-# search2() solves Opdracht 1 and first part of Opdracht 2, but better solutions exist.
-def search2(iteration_count, route_duration): 
+# Set data to data/StationsHolland.csv and data/ConnectionsHolland.csv (otherwise no solution is found)!!
+# search2() solves Opdracht 1, but better solutions exist.
+def search2(iteration_count, route_duration, rcount): 
 
     # Initialize variables
     lines_batch = []  # This is a batch of route_batch 'es.
@@ -27,7 +28,7 @@ def search2(iteration_count, route_duration):
         
         # Current search algorithm maximizes p, and minimizes T given p. Can be better with Min-minimization.
         # Continue if route_count is less than 20 and not all connections have been used
-        while (route_count <= 20) and (len(ridden_connections) is not twofold_connectioncount):
+        while (route_count < rcount) and (len(ridden_connections) is not twofold_connectioncount):
             limit = 0
             
             # Set start station
@@ -61,7 +62,7 @@ def search2(iteration_count, route_duration):
                         connection = random.choice(start_station.connections)
                         destination = connection[0]
                         route.add_route(destination, time)
-                        if route.total_time > 180:
+                        if route.total_time > route_duration:
                             limit = 1
                             route.delete_route(destination, time)
                             route_count += 1
@@ -69,13 +70,16 @@ def search2(iteration_count, route_duration):
                             break
                         start_station = destination
                         continue
+
+                    print("status okay")
         
         # Keep track of iterations and scores
         print("Connections ridden:", len(set(ridden_connections))/2)
         Min = 0
         for route in route_batch:
             Min += route.total_time
-        p = len(set(ridden_connections))/( twofold_connectioncount) 
+        p = len(set(ridden_connections))/(twofold_connectioncount) 
+        print("Fraction of connection used:", p)    # re-iterate until this is 1.
         T = len(route_batch)
         K = 10000*p - (T*100 + Min)
         print("K:", K)
@@ -94,12 +98,31 @@ def optimize(lines_batch, iteration_count):
     optimal_route = lines_batch[index][0]
     print("Max K-score found:", max_value)
     print("Optimal Line:", optimal_route)
-    return optimal_route
+    return optimal_route, max_value
 
-def visualize(iteration_count, route_duration):
-    lines_batch = search2(iteration_count, route_duration)
-    route_batch_optimal = optimize(lines_batch, iteration_count)
+def visualize(iteration_count, route_duration, route_count):
+    lines_batch = search2(iteration_count, route_duration, route_count)
+    optimise = optimize(lines_batch, iteration_count)
+    route_batch_optimal = optimise[0]
+    score = optimise[1]
+
+
+    # Now write the optimal lijnvoering out to output so as to observe the lijnvoering in text-form.
+    f = open("results/output.csv", "w")
+    f.truncate()
+    f.close()
+
+    with open("results/output.csv", 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["train", "stations"])
+        for route in route_batch_optimal:
+            names = []
+            for station in route.route:
+                names.append(station.name)
+            writer.writerow(["train_{}".format(route.id),f'[{", ".join(names)}]'])
+        writer.writerow(["score", "{}".format(score)])
     
+    # Plot as usual
     counter = 0
     for route in route_batch_optimal:
         route_length = len(route.route)
@@ -124,6 +147,6 @@ def visualize(iteration_count, route_duration):
         plt.ylabel("chart Y-coordinate")
         plt.show()
     
-visualize(1000, 120)
 
 # Can be run with both Holland and Nationaal.
+# But no solution found for Nationaal, route duration of 180 and route count of 20.

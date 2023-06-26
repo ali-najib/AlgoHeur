@@ -1,11 +1,11 @@
 import csv
-from station import Station
+from code.classes.station import Station
 
 
 def Stations():
     # Creates list of all stations with coordinates
     stations = []
-    with open(f"/Users/ali/Documents/Programming/AlgoHeur/data/StationsNationaal.csv", 'r') as f:
+    with open(f"data/StationsNationaal.csv", 'r') as f:
         reader = csv.reader(f)
         header = next(reader)
         if header != None:
@@ -18,7 +18,7 @@ def Stations():
 def Connections():
     connections = []
     stations = Stations()
-    with open(f"/Users/ali/Documents/Programming/AlgoHeur/data/ConnectiesNationaal.csv", 'r') as g:
+    with open(f"data/ConnectiesNationaal.csv", 'r') as g:
         reader = csv.reader(g)
         header = next(reader)
         if header != None:

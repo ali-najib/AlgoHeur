@@ -1,13 +1,13 @@
-from import_data import stations
+from code.algorithms.import_data import stations
 import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 import random
 import sys
-from station import Station
-from route import Route
+from code.classes.station import Station
+from code.classes.route import Route
 from array import *
-from baseline import Baseline_search
+from code.algorithms.baseline import Baseline_search
 import math
 import random
 
@@ -18,7 +18,7 @@ import random
 
 class SimulatedAnnealing():
     
-    def __init__(self, stations):
+    def __init__(self, stations, route_duration, route_count):
         """
         Initialise variables pertaining to the SimulatedAnnealing class and used in this implementation
         of the SimulatedAnnealing search-algorithm.
@@ -30,7 +30,7 @@ class SimulatedAnnealing():
             self.twofold_connectioncount += len(station.connections)
 
         # Retreive result from Baseline_search
-        self.runresults = Baseline_search(stations).run(180)
+        self.runresults = Baseline_search(stations).run(route_duration, route_count)
 
         # Ridden_connections keeps track of all connections have already been used in some route.
         self.ridden_connections = self.runresults[0]
@@ -44,7 +44,7 @@ class SimulatedAnnealing():
         self.iteration_numbers = []
         
 
-    def iterate(self, iteration_count, temperature, temperature_function, alpha, route_length):
+    def iterate(self, iteration_count, temperature, temperature_function, alpha, route_duration):
         """
         Performs the Simulated Annealing search-algorithm.
         """
@@ -94,15 +94,13 @@ class SimulatedAnnealing():
             # Loop while route can be extented
             while limit == 0:
 
-                S = random.choice([0, 0, 0, 20, 0])
                 connection = random.choice(start_station.connections)
                 destination = connection[0]
                 time = connection[1]
                 route.add_route(destination, time)
-                route.total_time += S
 
                 # If total time consumed by is greater than route_duration, e.g. 120 or 180, break while loop
-                if route.total_time > route_length:
+                if route.total_time > route_duration:
                     route.delete_route(destination, time)
                     limit = 1
 
@@ -150,6 +148,7 @@ class SimulatedAnnealing():
 
             # Print K-score for keeping track of K1 score
             print("Annealing-score:", K1)
+            print("Iteration-number:", iteration_number)
 
             # According on alpha and the temperature-function, update T.
             alpha = alpha
@@ -176,7 +175,7 @@ class SimulatedAnnealing():
 
 
     
-    def plot_expo(self, iteration_count, route_duration):
+    def plot_expo(self, iteration_count, route_duration, route_count):
         """
         Performs experiment for simulated annealing: 
             Choose Exponential Temperature-function
@@ -188,7 +187,7 @@ class SimulatedAnnealing():
         # For alpha = 0, 0.1, 0.2, 0.3, ..., 1, perform experiment.
         for i in range(0,11):
             alpha = i/10
-            Annealing_result = SimulatedAnnealing(stations).iterate(iteration_count, 10000, 1, alpha, route_duration)
+            Annealing_result = SimulatedAnnealing(stations, route_duration, route_count).iterate(iteration_count, 10000, 1, alpha, route_duration)
             plt.plot(Annealing_result[0], Annealing_result[1], linewidth=0.8, label="alpha = {}".format(alpha))
 
         # Plot the results
@@ -200,7 +199,7 @@ class SimulatedAnnealing():
 
 
     
-    def plot_linear(self, iteration_count, route_duration):
+    def plot_linear(self, iteration_count, route_duration, route_count):
         """
         Performs experiment for simulated annealing: 
             Choose Linear Temperature-function
@@ -212,7 +211,7 @@ class SimulatedAnnealing():
         # For alpha = 0, 0.1, 0.2, 0.3, ..., 1, perform experiment.
         for i in range(0,11):
             alpha = i/10
-            Annealing_result = SimulatedAnnealing(stations).iterate(iteration_count, 10000, 2, alpha, route_duration)
+            Annealing_result = SimulatedAnnealing(stations, route_duration, route_count).iterate(iteration_count, 10000, 2, alpha, route_duration)
             plt.plot(Annealing_result[0], Annealing_result[1], linewidth=0.8, label="alpha = {}".format(alpha))
 
         # Plot the results
@@ -223,7 +222,7 @@ class SimulatedAnnealing():
         plt.show()
 
 
-    def search_vs_score(self, iteration_count, route_duration):
+    def search_vs_score(self, iteration_count, route_duration, route_count):
         """
         Gives an impression of the inner-workings of Simulated Annealing whilst maximizing K.
         Does this via a plot.
@@ -233,7 +232,7 @@ class SimulatedAnnealing():
         alpha = 0.9
 
         # Perform simulated annealing under chosen alpha
-        Annealing_result = SimulatedAnnealing(stations).iterate(1000, 10000, 1, alpha, route_duration)
+        Annealing_result = SimulatedAnnealing(stations, route_duration, route_count).iterate(iteration_count, 10000, 1, alpha, route_duration)
         plt.plot(Annealing_result[0], Annealing_result[1], label = 'Annealing K-score')
         plt.plot(Annealing_result[0], Annealing_result[2], linewidth = 0.9, label = 'Intermediate K-scores')
 
@@ -245,7 +244,7 @@ class SimulatedAnnealing():
         plt.show()
         
  
-    def Optimal_lijnvoering_finder(self, iteration_count, route_duration):
+    def Optimal_lijnvoering_finder(self, iteration_count, route_duration, route_count):
         """
         Calculates and plots the lijnvoering found upon applying simulated annealing optimization with 
         a chosen amount of iterations. 
@@ -270,7 +269,7 @@ class SimulatedAnnealing():
         # Fill the list of K-scores-lists under a linear temperature function by lists of K-scores (for each iteration) under various alpha.
         for i in range(0, 11):
             alpha = i/10
-            K_list_linear.append(SimulatedAnnealing(stations).iterate(1000, iteration_count, 2, alpha, route_duration))
+            K_list_linear.append(SimulatedAnnealing(stations, route_duration, route_count).iterate(iteration_count, 1000, 2, alpha, route_duration))
 
         # Fill the list K_list1 by the maximum K-score in each list in K_list_linear.
         for i in range(0,11):
@@ -287,7 +286,7 @@ class SimulatedAnnealing():
         # Perform a similar procedure for the Exponential Temperature function
         for i in range(0, 11):
             alpha = i/10
-            K_list_expo.append(SimulatedAnnealing(stations).iterate(1000, iteration_count, 1, alpha, route_duration))
+            K_list_expo.append(SimulatedAnnealing(stations, route_duration, route_count).iterate(iteration_count, 1000, 1, alpha, route_duration))
         for i in range(0,11):
             max_value = max(K_list_expo[i][1])
             K_list2.append(max_value)
@@ -307,10 +306,10 @@ class SimulatedAnnealing():
 
 
         # Now write the optimal lijnvoering out to output_annealing so as to observe the lijnvoering in text-form.
-        f = open("output_annealing.csv", "w")
+        f = open("results/output_annealing.csv", "w")
         f.truncate()
         f.close()
-        with open("output_annealing.csv", 'w', newline='') as file:
+        with open("results/output_annealing.csv", 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["train", "stations"])
             for route in route_batch_optimal:
@@ -352,7 +351,7 @@ class SimulatedAnnealing():
 # Now simulate!
 # Delete or add a hashtag in front of the below lines in order to run or disable them.
 
-#SimulatedAnnealing(stations).plot_linear(100, 180)
+#SimulatedAnnealing(stations).plot_linear(10000, 180)
 #SimulatedAnnealing(stations).plot_expo(10000, 180)
-#SimulatedAnnealing(stations).search_vs_score(100, 180)
+#SimulatedAnnealing(stations).search_vs_score(10000, 180)
 #SimulatedAnnealing(stations).Optimal_lijnvoering_finder(10000, 180)

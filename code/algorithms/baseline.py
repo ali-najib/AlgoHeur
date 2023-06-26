@@ -1,11 +1,11 @@
-from import_data import stations
+from code.algorithms.import_data import stations
 import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 import random
 import sys
-from station import Station
-from route import Route
+from code.classes.station import Station
+from code.classes.route import Route
 from array import *
 import time
 
@@ -28,7 +28,7 @@ class Baseline_search():
         for station in self.stations:
             self.twofold_connectioncount += len(station.connections)
 
-    def run(self, route_duration):
+    def run(self, route_duration, rcount):
         """
         Runs the Baseline-search algorithm
         """
@@ -42,7 +42,7 @@ class Baseline_search():
         route_count = 0
         
         # Continue if route_count is less than 20 and not all connections have been used
-        while (route_count < 20):
+        while (route_count < rcount):
             limit = 0
             
             # Set start station
@@ -52,12 +52,10 @@ class Baseline_search():
             # Loop while route can be extented
             while limit == 0:
 
-                S = random.choice([0, 0, 0, 20, 0])
                 connection = random.choice(start_station.connections)
                 destination = connection[0]
                 time = connection[1]
                 route.add_route(destination, time)
-                route.total_time += S
 
                 # If total time consumed by is greater than route_duration, e.g. 120 or 180, break while loop
                 if route.total_time > route_duration:
@@ -93,13 +91,13 @@ class Baseline_search():
         return self.ridden_connections, self.route_batch, K
     
 
-    def visualise(self):
+    def visualise(self, route_duration, rcount):
         """
         Constructs a map of the stations with their interconnections, and enforces a route on the map.
         """
 
         # Retrieve results from Baseline_search(stations).run(), initialize route_batch
-        route_batch = Baseline_search(stations).run()
+        route_batch = Baseline_search(stations).run(route_duration, rcount)
         route_batch = route_batch[1]
 
         # Perform visualisation by plotting each route on one coordinate system seperately
@@ -134,7 +132,7 @@ class Baseline_search():
         return
     
 
-    def density_plot(self, iteration_count, route_duration):
+    def density_plot(self, iteration_count, route_duration, rcount):
         """
         Constructs a density plot of K-scores found after running Baseline-search.
         Important for knowing where initial values from running Hillclimber and SimulatedAnnealing comes from.
@@ -146,7 +144,7 @@ class Baseline_search():
 
         # For each run, append its resulting K to data
         while counter < iteration_count:
-            runresults = Baseline_search(stations).run(route_duration)
+            runresults = Baseline_search(stations).run(route_duration, rcount)
             data.append(runresults[2])
             counter += 1
 
@@ -157,7 +155,7 @@ class Baseline_search():
              kde_kws={'linewidth': 3})
 
         #Plot formatting
-        plt.title('Baseline Results ({iteration_count} runs, Setting = Holland)')
+        plt.title(f'Baseline Results ({iteration_count} runs, Setting = Nationaal)')
         plt.xlabel('K-value')
         plt.ylabel('Density')
         plt.show()

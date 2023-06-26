@@ -1,15 +1,15 @@
-from import_data import stations
+from code.algorithms.import_data import stations
 import matplotlib.pyplot as plt
 import seaborn as sns
 import csv
 import random
 import sys
-from station import Station
-from route import Route
+from code.classes.station import Station
+from code.classes.route import Route
 from array import *
-from baseline import Baseline_search
+from code.algorithms.baseline import Baseline_search
 
-class Hillclimber():
+class Hillclimber_prime():
 
     def __init__(self, stations) -> None:
         """
@@ -26,13 +26,13 @@ class Hillclimber():
         self.iteration_number = []
 
 
-    def iterate(self, iteration_count, route_duration):
+    def iterate(self, iteration_count, route_duration, route_count):
         """
         Performs the Hillclimber search-algorithm.
         """
 
         # Retreive result from Baseline_search
-        self.runresults = Baseline_search(stations).run(route_duration)
+        self.runresults = Baseline_search(stations).run(route_duration, route_count)
 
         # Ridden_connections keeps track of all connections have already been used in some route.
         self.ridden_connections = self.runresults[0]
@@ -77,32 +77,40 @@ class Hillclimber():
             # Construct new route
             limit = 0
 
+            #### In the next 35 lines use the same search-strategy as used to solve opdracht 1. (i.e. use as many connections as possible)
             # Loop while route can be extented
             while limit == 0:
+                connection_iterator = 0
+                for connection in start_station.connections:
+                    destination = connection[0]
+                    time = connection[1]
+                    connection_iterator += 1
 
-                S = random.choice([0, 0, 0, 20, 0])
-                connection = random.choice(start_station.connections)
-                destination = connection[0]
-                time = connection[1]
-                route.add_route(destination, time)
-                route.total_time += S
+                    # If connection between start_station and destination has not yet been ridden
+                    if (start_station, destination) not in self.ridden_connections:
+                        route.add_route(destination, time)
+                        if route.total_time > route_duration:
+                            limit = 1
+                            route.delete_route(destination, time)
+                            self.route_batch.append(route)
+                            break
+                        self.ridden_connections.append((start_station, destination))
+                        self.ridden_connections.append(((destination, start_station)))
+                        start_station = destination
+                        continue
 
-                # If total time consumed by is greater than route_duration, e.g. 120 or 180, break while loop
-                if route.total_time > route_duration:
-                    route.delete_route(destination, time)
-                    limit = 1
-
-                    # Include route constructed so far in the current state of the lijnvoering
-                    self.route_batch.append(route)
-                    break
-
-                # Update ridden_connections by inserting connection newly ridden by newly constructed route.
-                self.ridden_connections.append((start_station, destination))
-                self.ridden_connections.append((destination, start_station))
-
-                # Update start station upon further extension of route
-                start_station = destination
-                continue
+                    # If there's no unridden connection from start_station
+                    if connection_iterator == len(start_station.connections):
+                        connection = random.choice(start_station.connections)
+                        destination = connection[0]
+                        route.add_route(destination, time)
+                        if route.total_time > route_duration:
+                            limit = 1
+                            route.delete_route(destination, time)
+                            self.route_batch.append(route)
+                            break
+                        start_station = destination
+                        continue
 
             # Calculate the K-score for current state of the lijnvoering
             Min = 0
@@ -128,8 +136,8 @@ class Hillclimber():
                 self.route_batch.append(route1)
 
             # Print K scores for keeping track of K-scores.
-            print(K2)
-            print(K1)
+            print("Hillcimber-score:", K1)
+            print("Iteration-number:", iteration_number)
 
             # Keep track of K-scores, both old and new, for later use in performing experiments and plotting the results.
             self.hillclimber_score.append(K1)
@@ -151,14 +159,14 @@ class Hillclimber():
     
 
 
-    def plot(self, iteration_count, route_duration):
+    def plot(self, iteration_count, route_duration, route_count):
         """
         Visualizes the Hill-algorithm by plotting both the K-score for the Hillclimber
         and each K-score upon searching for the optimal K-score
         """
 
         # Retrieves results from running the Hillclimber algorithm
-        Hillclimb_results = Hillclimber(stations).iterate(iteration_count, route_duration)
+        Hillclimb_results = Hillclimber_prime(stations).iterate(iteration_count, route_duration, route_count)
 
         # Plot the optimal K-score for the Hillclimber-search algorithm
         plt.plot(Hillclimb_results[0], Hillclimb_results[1], label='Hillclimber K-score')
@@ -174,7 +182,7 @@ class Hillclimber():
         plt.show()
 
 
-    def optimal_lijnvoering_finder(self, iteration_count, route_duration):
+    def optimal_lijnvoering_finder(self, iteration_count, route_duration, route_count):
         """
         Calculates and plots the lijnvoering found upon applying Hillclimber optimization with 
         a chosen amount of iterations. 
@@ -183,16 +191,16 @@ class Hillclimber():
         """
     
         # Retreive result from running the Hillclimber search algorithm that are relevant for finding the optimal lijnvoering.
-        runresults = Hillclimber.iterate(self, iteration_count, route_duration)
+        runresults = Hillclimber_prime.iterate(self, iteration_count, route_duration, route_count)
         score = max(runresults[1])
         route_batch_optimal = runresults[3]
 
         # Now write the optimal lijnvoering out to output_annealing so as to observe the lijnvoering in text-form.
-        f = open("output_hillclimber.csv", "w")
+        f = open("results/output_hillcimber_prime.csv", "w")
         f.truncate()
         f.close()
 
-        with open("output_hillclimber.csv", 'w', newline='') as file:
+        with open("results/output_hillcimber_prime.csv", 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["train", "stations"])
             for route in route_batch_optimal:
@@ -226,10 +234,10 @@ class Hillclimber():
             plt.xlabel("chart X-coordinate")
             plt.ylabel("chart Y-coordinate")
         
-            plt.show()
+            #plt.show()
 
 
 ## Now simulate!
 
-#Hillclimber(stations).plot(1000, 180)
+#Hillclimber(stations).plot(20000, 180)
 #Hillclimber(stations).optimal_lijnvoering_finder(100, 180)
