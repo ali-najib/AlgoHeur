@@ -237,6 +237,6 @@ class Hillclimber_prime():
             plt.xlabel("chart X-coordinate")
             plt.ylabel("chart Y-coordinate")
         
-            #plt.show()
+            plt.show()
 
 

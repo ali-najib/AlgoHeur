@@ -227,5 +227,5 @@ class Hillclimber():
             plt.xlabel("chart X-coordinate")
             plt.ylabel("chart Y-coordinate")
         
-            #plt.show()
+            plt.show()
 
