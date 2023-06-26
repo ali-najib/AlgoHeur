@@ -1,4 +1,4 @@
-# AlgoHeur Project, by Ali Najib
+# Algorithms and Heuristics Project, by Ali Najib
 
 Deze case gaat over het maken van de lijnvoering. Meer specifiek: over de lijnvoering van intercitytreinen. Dat betekent dat je binnen een gegeven tijdsframe een aantal trajecten uitzet. Een traject is een route van sporen en stations waarover treinen heen en weer rijden. Een traject mag niet langer zijn dan het opgegeven tijdsframe.
 
@@ -36,4 +36,4 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 
 ## Auteur
 
-Ali Najib
+- Ali Najib
