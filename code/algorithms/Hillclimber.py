@@ -168,7 +168,7 @@ class Hillclimber():
         plt.plot(Hillclimb_results[0], Hillclimb_results[2], linewidth = 0.9, alpha = 0.8, label='Intermediate search-scores')
 
         # Form the plot and show it
-        plt.title(r'Hillclimber, score vs iteration')
+        plt.title(r'Hillclimber, score vs iteration, setting Holland')
         plt.xlabel("Iteration Count")
         plt.ylabel(r'Hillclimber\'s K-score')
         plt.legend()

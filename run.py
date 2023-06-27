@@ -6,7 +6,7 @@ from code.algorithms.SimulatedAnnealing_prime import SimulatedAnnealing_prime
 from code.algorithms.import_data import stations
 from code.algorithms.opdrachtsolver import visualize
 
-iteration_count = 100
+iteration_count = 10000
 route_duration = 180
 route_count = 20
 
@@ -50,7 +50,7 @@ route_count = 20
 ######## SIMULATED ANNEALING ########
 
 ## Perform experiment for simulated annealing: choose Linear Temperature-function, vary alpha over 0, 0.1, 0.2, 0.3, ..., 1.
-#SimulatedAnnealing(stations, route_duration, route_count).plot_linear(iteration_count, route_duration, route_count)
+SimulatedAnnealing(stations, route_duration, route_count).plot_linear(iteration_count, route_duration, route_count)
 
 ## Perform experiment for simulated annealing: choose Exponential Temperature-function, vary alpha over 0, 0.1, 0.2, 0.3, ..., 1.
 #SimulatedAnnealing(stations, route_duration, route_count).plot_expo(iteration_count, route_duration, route_count)

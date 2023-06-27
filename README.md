@@ -1,10 +1,19 @@
 # Algorithms and Heuristics Project, by Ali Najib
 
-Deze case gaat over het maken van de lijnvoering. Meer specifiek: over de lijnvoering van intercitytreinen. Dat betekent dat je binnen een gegeven tijdsframe een aantal trajecten uitzet. Een traject is een route van sporen en stations waarover treinen heen en weer rijden. Een traject mag niet langer zijn dan het opgegeven tijdsframe. (work in progress)
+Deze case gaat over het maken van **de** lijnvoering van intercitytreinen. Dat betekent dat er binnen een gegeven tijdsframe een aantal trajecten worden uitgezet. Een traject is een route van sporen en stations waarover treinen heen en weer rijden, en mag niet langer zijn dan het opgegeven tijdsframe. Het antwoord op de volgende vraag is de lijnvoering: Wat zijn de trajecten waarover de treinen gedurende de dag heen en weer rijden?
+
+Een voorbeeldopdracht dat hieruit kan worden geformuleerd is: Maak een lijnvoering voor Noord- en Zuid-Holland met maximaal zeven trajecten binnen een tijdsframe van twee uur, waarbij alle verbindingen bereden worden.​
+
+Ook kunnen lijnvoeringen worden geconstrueerd zodat ze voldoen aan bepaalde eisen (zoals de bovenstaande) en een bepaalde lijnvoeringsvoeringsoptimalisatie uitvoeren, zoals de maximalisatie van 
+```
+ K = p*10000 - (T*100 + Min)
+```
+waarbij ```p``` de fractie van de bereden verbindingen (dus tussen 0 en 1), ​
+```T``` het aantal trajecten en ​```Min```  het aantal minuten in alle trajecten samen. Deze optimalisatie wordt uitgevoerd in dit project.
 
 ## Aan de slag
  Vereisten:
-Python 3.8.9
+De code is geschreven in Python 3.8.9
 
 ### User Interface
 
