@@ -6,7 +6,7 @@ from code.algorithms.SimulatedAnnealing_prime import SimulatedAnnealing_prime
 from code.algorithms.import_data import stations
 from code.algorithms.opdrachtsolver import visualize
 
-iteration_count = 1000
+iteration_count = 100
 route_duration = 180
 route_count = 20
 
