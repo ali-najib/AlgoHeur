@@ -18,7 +18,7 @@ De code is geschreven in Python 3.8.9
 ### User Interface
 
 Het gebruik van deze applicatie gaat via de file run.py. Alle relevante code-lines te runnen voor een gebruiker staan in die file.
-Om een van de code-lines te runnen, verwijder de hashtag voor de desbetreffende codeline en run de file run.py. In Python3 gaat het runnen van de file als
+Om een van de code-lines te runnen, verwijder de hashtag voor de desbetreffende codeline en run de file **run.py**. In Python3 gaat het runnen van de file als
 
 ```
 python3 run.py

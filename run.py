@@ -6,7 +6,7 @@ from code.algorithms.SimulatedAnnealing_prime import SimulatedAnnealing_prime
 from code.algorithms.import_data import stations
 from code.algorithms.opdrachtsolver import visualize
 
-iteration_count = 10000
+iteration_count = 1000
 route_duration = 180
 route_count = 20
 
@@ -50,7 +50,7 @@ route_count = 20
 ######## SIMULATED ANNEALING ########
 
 ## Perform experiment for simulated annealing: choose Linear Temperature-function, vary alpha over 0, 0.1, 0.2, 0.3, ..., 1.
-SimulatedAnnealing(stations, route_duration, route_count).plot_linear(iteration_count, route_duration, route_count)
+#SimulatedAnnealing(stations, route_duration, route_count).plot_linear(iteration_count, route_duration, route_count)
 
 ## Perform experiment for simulated annealing: choose Exponential Temperature-function, vary alpha over 0, 0.1, 0.2, 0.3, ..., 1.
 #SimulatedAnnealing(stations, route_duration, route_count).plot_expo(iteration_count, route_duration, route_count)
@@ -90,7 +90,7 @@ SimulatedAnnealing(stations, route_duration, route_count).plot_linear(iteration_
 #SimulatedAnnealing_prime(stations, route_duration, route_count).plot_expo(iteration_count, route_duration, route_count)
 
 ## Give an impression of the inner-workings of Simulated Annealing whilst maximizing K.
-#SimulatedAnnealing_prime(stations, route_duration, route_count).search_vs_score(iteration_count, route_duration, route_count)
+SimulatedAnnealing_prime(stations, route_duration, route_count).search_vs_score(iteration_count, route_duration, route_count)
 
 ## Conduct an experiment under: vary the Temperature function over Linear and Exponential, vary alpha over 0, 0.1, 0.2, 0.3, ..., 1.
 ## function chooses the lijnvoering with highest K under variable alpha and temperature function, andchosen amount of iterations.
