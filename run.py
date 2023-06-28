@@ -90,7 +90,7 @@ route_count = 20
 #SimulatedAnnealing_prime(stations, route_duration, route_count).plot_expo(iteration_count, route_duration, route_count)
 
 ## Give an impression of the inner-workings of Simulated Annealing whilst maximizing K.
-SimulatedAnnealing_prime(stations, route_duration, route_count).search_vs_score(iteration_count, route_duration, route_count)
+#SimulatedAnnealing_prime(stations, route_duration, route_count).search_vs_score(iteration_count, route_duration, route_count)
 
 ## Conduct an experiment under: vary the Temperature function over Linear and Exponential, vary alpha over 0, 0.1, 0.2, 0.3, ..., 1.
 ## function chooses the lijnvoering with highest K under variable alpha and temperature function, andchosen amount of iterations.
